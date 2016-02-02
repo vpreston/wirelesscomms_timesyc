@@ -2,11 +2,11 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: Transmitter
-# Generated: Sun Jan 31 19:08:31 2016
+# Generated: Tue Feb  2 11:33:49 2016
 ##################################################
 
 from PyQt4 import Qt
-from gnuradio import analog
+from gnuradio import blocks
 from gnuradio import eng_notation
 from gnuradio import gr
 from gnuradio import qtgui
@@ -74,13 +74,13 @@ class transmitter(gr.top_block, Qt.QWidget):
         self.olin_usrp11.set_samp_rate(samp_rate)
         self.olin_usrp11.set_center_freq(2.4855e9, 0)
         self.olin_usrp11.set_gain(20, 0)
-        self.analog_sig_source_x_0 = analog.sig_source_c(samp_rate, analog.GR_SQR_WAVE, 500, 1, 0)
+        self.blocks_file_source_0 = blocks.file_source(gr.sizeof_gr_complex*1, "/home/vpreston/Documents/wirelesscomms_timesyc/GRC scripts/transmit_this.npy", True)
 
         ##################################################
         # Connections
         ##################################################
-        self.connect((self.analog_sig_source_x_0, 0), (self.olin_usrp11, 0))
-        self.connect((self.analog_sig_source_x_0, 0), (self.qtgui_time_sink_x_0, 0))
+        self.connect((self.blocks_file_source_0, 0), (self.olin_usrp11, 0))
+        self.connect((self.blocks_file_source_0, 0), (self.qtgui_time_sink_x_0, 0))
 
 
 # QT sink close method reimplementation
@@ -95,7 +95,6 @@ class transmitter(gr.top_block, Qt.QWidget):
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
         self.olin_usrp11.set_samp_rate(self.samp_rate)
-        self.analog_sig_source_x_0.set_sampling_freq(self.samp_rate)
         self.qtgui_time_sink_x_0.set_samp_rate(self.samp_rate)
 
 if __name__ == '__main__':
