@@ -9,7 +9,7 @@ data = []
 real = []
 imag = []
 
-def open(filename='GRC scripts/test.dat'):
+def open(filename='GRC scripts/Data/test.dat'):
 	data = numpy.fromfile(filename, dtype = 'float32')[2000:]
 	real = data[0::2]
 	imag = data[1::2]
@@ -29,10 +29,10 @@ def fourth(data):
 	print(freq[impulse])
 	#plt.plot(freq,transform.real, label = "real")
 	#plt.plot(freq,transform.imag, label = "imag")
-	#plt.plot(freq,transform4.real, label = "real4")
-	#plt.plot(freq,transform4.imag, label = "imag4")
+	plt.plot(freq,transform4.real, label = "real4")
+	# plt.plot(freq,transform4.imag, label = "imag4")
 	#plt.legend()
-	#plt.show()
+	plt.show()
 	return abs(freq[impulse])
 
 def process(offset, data, time):
