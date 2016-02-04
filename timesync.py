@@ -9,8 +9,8 @@ data = []
 real = []
 imag = []
 
-def open(filename='GRC scripts/Data/test.dat'):
-	data = numpy.fromfile(filename, dtype = 'float32')[2000:]
+def open(filename='GRC scripts/test.dat'):
+	data = numpy.fromfile(filename, dtype = 'float32')[2000:4000]
 	real = data[0::2]
 	imag = data[1::2]
 	t = numpy.linspace(0, len(real)/SAMPLE_RATE,len(real))
@@ -20,20 +20,21 @@ def open(filename='GRC scripts/Data/test.dat'):
 	return real, t
 
 def fourth(data):
-	data = data[0::10]#downsample data so FFT finishes in reasonable time
+	#data = data[0::10]#downsample data so FFT finishes in reasonable time
 	#transform4 = fft.fft(numpy.power(data,4))[2:]
 	transform2 = fft.fft(numpy.power(data,2))[2:]
 	#transform = fft.fft(data)
-	freq = fft.fftfreq(len(data),SAMPLE_RATE/10)[2:]# division by 10 is because of downsampling
+	freq = fft.fftfreq(len(data),SAMPLE_RATE)[2:]# division by 10 is because of downsampling
 	freq = [f*2*numpy.pi for f in freq]
 	impulse = numpy.argmax(transform2)
-	print(impulse)
-	print(freq[impulse])
+	#print(impulse)
+	#print(freq[impulse])
 	#plt.plot(freq,transform.real, label = "real")
 	#plt.plot(freq,transform.imag, label = "imag")
-	plt.plot(freq,transform4.real, label = "real4")
-	# plt.plot(freq,transform4.imag, label = "imag4")
+	#plt.plot(freq,transform4.real, label = "real4")
+	#plt.plot(freq,transform4.imag, label = "imag4")
 	#plt.legend()
+	return freq[impulse]
 
 def process(offset, data, time):
 	offset = offset/2 #offset is raised to the 4th, so when converted it is *4
@@ -41,15 +42,18 @@ def process(offset, data, time):
 	#plt.plot(data)
 	#plt.plot(res)
 	#plt.show()
-	return res
+	filtered = [1 if r > 0 else -1 for r in res]
+	return res, filtered
 
 
 if __name__=='__main__':
 	data, time = open()
 	offset = fourth(data)
-	res = process(offset,data, time)
+	res, filtered = process(offset,data, time)
 	#plt.plot(time,data)
-	plt.plot(time[1::10],res[1::10])
+	plt.axis([0,.035,-1.5,1.5])
+	plt.plot(time,res)
+	plt.plot(time,filtered)
 	plt.show()
 	#open()
 
