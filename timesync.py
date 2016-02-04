@@ -21,22 +21,24 @@ def open(filename='GRC scripts/test.dat'):
 	return real, t
 
 def fourth(data):
-	transform4 = fft.fft(numpy.power(data,4)[0::10])[2:]
-	transform = fft.fft(data[0::10])[2:]
-	freq = fft.fftfreq(len(data[0::10]),SAMPLE_RATE/10)[2:]# division by 10 is because of downsampling
+	data = data[0::10]
+	transform4 = fft.fft(numpy.power(data,4))[2:]
+	transform2 = fft.fft(numpy.power(data,2))[2:]
+	transform = fft.fft(data)
+	freq = fft.fftfreq(len(data),SAMPLE_RATE/10)[2:]# division by 10 is because of downsampling
 	impulse = numpy.argmax(transform4)
 	print(impulse)
 	print(freq[impulse])
 	#plt.plot(freq,transform.real, label = "real")
 	#plt.plot(freq,transform.imag, label = "imag")
-	#plt.plot(freq,transform4.real, label = "real4")
-	#plt.plot(freq,transform4.imag, label = "imag4")
+	#plt.plot(freq,transform4.real, label = "real2")
+	#plt.plot(freq,transform4.imag, label = "imag2")
 	#plt.legend()
 	#plt.show()
 	return abs(freq[impulse])
 
 def process(offset, data, time):
-	offset = offset/4 #offset is raised to the 4th, so when converted it is *4
+	offset = offset/2 #offset is raised to the 4th, so when converted it is *4
 	res = data*numpy.cos([t*(TRANSMIT_FREQ-offset) for t in time])
 	#plt.plot(data)
 	#plt.plot(res)
