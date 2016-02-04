@@ -2,7 +2,7 @@ import numpy
 from numpy import fft
 import matplotlib.pyplot as plt
 
-SAMPLE_RATE = 32e3*2*numpy.pi#samples/second
+SAMPLE_RATE = 32e3#samples/second
 TRANSMIT_FREQ = 2.4855e9*2*numpy.pi
 
 data = []
@@ -17,16 +17,16 @@ def open(filename='GRC scripts/test.dat'):
 	#plt.plot(real)
 	#plt.plot(imag)
 	#plt.show()
-	print real
 	return real, t
 
 def fourth(data):
-	data = data[0::10]
-	transform4 = fft.fft(numpy.power(data,4))[2:]
+	data = data[0::10]#downsample data so FFT finishes in reasonable time
+	#transform4 = fft.fft(numpy.power(data,4))[2:]
 	transform2 = fft.fft(numpy.power(data,2))[2:]
-	transform = fft.fft(data)
+	#transform = fft.fft(data)
 	freq = fft.fftfreq(len(data),SAMPLE_RATE/10)[2:]# division by 10 is because of downsampling
-	impulse = numpy.argmax(transform4)
+	freq = [f*2*numpy.pi for f in freq]
+	impulse = numpy.argmax(transform2)
 	print(impulse)
 	print(freq[impulse])
 	#plt.plot(freq,transform.real, label = "real")
@@ -35,11 +35,11 @@ def fourth(data):
 	#plt.plot(freq,transform4.imag, label = "imag2")
 	#plt.legend()
 	#plt.show()
-	return abs(freq[impulse])
+	return freq[impulse]
 
 def process(offset, data, time):
 	offset = offset/2 #offset is raised to the 4th, so when converted it is *4
-	res = data*numpy.cos([t*(TRANSMIT_FREQ-offset) for t in time])
+	res = data*numpy.exp(1j*offset*TRANSMIT_FREQ)
 	#plt.plot(data)
 	#plt.plot(res)
 	#plt.show()
@@ -51,7 +51,7 @@ if __name__=='__main__':
 	offset = fourth(data)
 	res = process(offset,data, time)
 	#plt.plot(time,data)
-	plt.plot(time,res)
+	plt.plot(time[1::10],res[1::10])
 	plt.show()
 	#open()
 
