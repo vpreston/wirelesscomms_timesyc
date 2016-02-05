@@ -29,23 +29,23 @@ def fourth(data):
 	freq = [f*2*numpy.pi for f in freq]
 	impulse = (numpy.argmax(transform4))#*2*numpy.pi)/len(transform4)
 	print(impulse)
-	#plt.plot(abs(transform4))
-	#plt.show()
+	# plt.plot(abs(transform4), label = "FFT")
+	# plt.legend()
+	# plt.show()
 	return freq[impulse]
 
 def process(offset, data, time):
-	offset = offset/4 #offset is raised to the 4th, so when converted it is *4
-	#print(offset)
+	offset = offset/4#-9e-10 #offset is raised to the 4th, so when converted it is *4
+	print(offset)
 	#print(data)
-	res = data*numpy.exp(-1j*offset*time)
+	res = data*numpy.exp(-1j*offset*time*SAMPLE_RATE)
 	#print(numpy.exp(1j*offset*time))
 	print(res)
-	plt.plot(data, label="data")
-	plt.plot(res,label="results")
-	plt.legend()
-	plt.show()
+	# plt.plot(data, label="data")
+	# plt.plot(res,label="results")
+	# plt.legend()
+	# plt.show()
 	return res
-
 
 if __name__=='__main__':
 	data, time = open()
@@ -54,8 +54,11 @@ if __name__=='__main__':
 	print(res)
 	#plt.plot(time,data)
 	# plt.axis([0,0.35,-0.002,0.002])
-	#plt.plot(time,res.real)
-	#plt.plot(time,res.imag)
+	plt.plot(res.real, label="Real")
+	plt.plot(res.imag, label = "Imaginary")
+	# plt.legend()
+	#plt.plot(abs(res), label= "Absolute Value")
+	#plt.scatter(res.real,res.imag)
 	#plt.plot(filtered)
 	plt.show()
 	#open()
