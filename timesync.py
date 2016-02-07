@@ -14,10 +14,8 @@ def open(filename='GRC scripts/Data/close.dat'):
 	real = data[0::2]
 	imag = data[1::2]
 	data = real+1j*imag
+	# print data
 	t = numpy.linspace(0, len(data), len(data))
-	#plt.plot(real)
-	#plt.plot(imag)
-	#plt.show()
 	return data, t
 
 def fourth(data):
@@ -27,7 +25,7 @@ def fourth(data):
 	#transform = fft.fft(data)[2:]
 	freq = fft.fftfreq(len(data),SAMPLE_RATE)
 	freq = [f*2*numpy.pi for f in freq]
-	impulse = (numpy.argmax(transform4))#*2*numpy.pi)/len(transform4)
+	impulse = (numpy.argmax(transform4))
 	print(impulse)
 	# plt.plot(abs(transform4), label = "FFT")
 	# plt.legend()
@@ -36,16 +34,19 @@ def fourth(data):
 
 def process(offset, data, time):
 	offset = offset/4#-9e-10 #offset is raised to the 4th, so when converted it is *4
-	print(offset)
+	# print(offset)
 	#print(data)
 	res = data*numpy.exp(-1j*offset*time*SAMPLE_RATE)
-	#print(numpy.exp(1j*offset*time))
-	print(res)
+	filtered = res
+	filtered[(filtered.real+filtered.imag) > 0] = 1
+	filtered[(filtered.real+filtered.imag) <= 0] = -1 #filtering like this actually gives a really clean signal
+	pll_res = 0
+	# print(res)
 	# plt.plot(data, label="data")
 	# plt.plot(res,label="results")
 	# plt.legend()
 	# plt.show()
-	return res
+	return filtered
 
 if __name__=='__main__':
 	data, time = open()
@@ -53,13 +54,12 @@ if __name__=='__main__':
 	res = process(offset,data, time)
 	print(res)
 	#plt.plot(time,data)
-	# plt.axis([0,0.35,-0.002,0.002])
+	plt.axis([0,9000,-1.1,1.1])
 	plt.plot(res.real, label="Real")
-	plt.plot(res.imag, label = "Imaginary")
+	# plt.plot(res.imag, label = "Imaginary")
 	# plt.legend()
 	#plt.plot(abs(res), label= "Absolute Value")
-	#plt.scatter(res.real,res.imag)
-	#plt.plot(filtered)
+	# plt.scatter(res.real,res.imag)
 	plt.show()
 	#open()
 
