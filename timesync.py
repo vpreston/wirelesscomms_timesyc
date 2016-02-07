@@ -9,7 +9,7 @@ data = []
 real = []
 imag = []
 
-def open(filename='GRC scripts/Data/close.dat'):
+def open(filename='GRC scripts/test.dat'):
 	data = numpy.fromfile(filename, dtype = 'float32')[2000:20000]
 	real = data[0::2]
 	imag = data[1::2]
@@ -37,16 +37,22 @@ def process(offset, data, time):
 	# print(offset)
 	#print(data)
 	res = data*numpy.exp(-1j*offset*time*SAMPLE_RATE)
-	filtered = res
-	filtered[(filtered.real+filtered.imag) > 0] = 1
-	filtered[(filtered.real+filtered.imag) <= 0] = -1 #filtering like this actually gives a really clean signal
-	pll_res = 0
+	# filtered = res
+	# filtered[(filtered.real+filtered.imag) > 0] = 1
+	# filtered[(filtered.real+filtered.imag) <= 0] = -1 #filtering like this actually gives a really clean signal
+	rms = numpy.sqrt(numpy.mean(numpy.square(res))) 
+	w = res/rms
+	error = w.real*w.imag
+	beta = 0.00005
+	shift = beta*error
+	pll_res = res*numpy.exp(-1j*time*shift)
+	pll_res = pll_res.real + pll_res.imag
 	# print(res)
 	# plt.plot(data, label="data")
 	# plt.plot(res,label="results")
 	# plt.legend()
 	# plt.show()
-	return filtered
+	return pll_res
 
 if __name__=='__main__':
 	data, time = open()
@@ -54,9 +60,9 @@ if __name__=='__main__':
 	res = process(offset,data, time)
 	print(res)
 	#plt.plot(time,data)
-	plt.axis([0,9000,-1.1,1.1])
+	# plt.axis([0,9000,-1.1,1.1])
 	plt.plot(res.real, label="Real")
-	# plt.plot(res.imag, label = "Imaginary")
+	plt.plot(res.imag, label = "Imaginary")
 	# plt.legend()
 	#plt.plot(abs(res), label= "Absolute Value")
 	# plt.scatter(res.real,res.imag)
