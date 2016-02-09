@@ -69,6 +69,12 @@ def process(offset, data, time):
 
 	return pll_res
 
+# def error_calc(data):
+# 	data = abs(data)
+# 	amp = numpy.mean(data)
+# 	noise = open
+
+
 
 if __name__=='__main__':
 
@@ -79,6 +85,7 @@ if __name__=='__main__':
 	# plt.title("Unprocessed")
 	offset = fourth(data)
 	res = process(offset,data, time)
+	#print(interpret(res))
 
 	# plt.plot(res.real, label="Real")
 	# plt.plot(res.imag, label = "Imaginary")
