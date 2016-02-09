@@ -1,5 +1,7 @@
 import numpy as np
 
+#aiming to transmit 32k/bits per second
+
 def make_vector(vector_length, upsample):
 	elements = np.round(np.random.rand(vector_length))
 	elements = (elements * 2 - 1) / 100
