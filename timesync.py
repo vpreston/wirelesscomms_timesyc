@@ -11,7 +11,7 @@ real = []
 imag = []
 
 #get and process data
-def open(filename='GRC scripts/test.dat'):
+def open(filename='GRC scripts/Data/amp1.dat'):
 	data = numpy.fromfile(filename, dtype = 'float32')[2000:40000]
 	real = data[0::2]
 	imag = data[1::2]
@@ -54,7 +54,6 @@ def process(offset, data, time):
 	pll_res = pll_res.real + pll_res.imag
 
 	return pll_res
-
 if __name__=='__main__':
 
 	data, time = open()
