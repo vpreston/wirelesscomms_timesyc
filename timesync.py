@@ -9,12 +9,12 @@ data = []
 real = []
 imag = []
 
-def open(filename='GRC scripts/test.dat'):
+def open(filename='GRC scripts/Data/100p_100sym.dat'):
 	data = numpy.fromfile(filename, dtype = 'float32')[2000:20000]
 	real = data[0::2]
 	imag = data[1::2]
 	data = real+1j*imag
-	# print data
+
 	t = numpy.linspace(0, len(data), len(data))
 	return data, t
 
@@ -36,23 +36,35 @@ def process(offset, data, time):
 	offset = offset/4#-9e-10 #offset is raised to the 4th, so when converted it is *4
 	# print(offset)
 	#print(data)
+	# boxcar = []
+	# average = []
+	# count = 0
+	# for element in data:
+	# 	if count < 10:
+	# 		boxcar.append(element)
+	# 		average.append(element)
+	# 		count += 1
+	# 	elif count == 10:
+	# 		boxcar.append(element)
+	# 		average.append(sum(boxcar)/10.)
+	# 		boxcar.pop(0)
+	# data = average
 	res = data*numpy.exp(-1j*offset*time*SAMPLE_RATE)
-	# filtered = res
-	# filtered[(filtered.real+filtered.imag) > 0] = 1
-	# filtered[(filtered.real+filtered.imag) <= 0] = -1 #filtering like this actually gives a really clean signal
 	rms = numpy.sqrt(numpy.mean(numpy.square(res))) 
 	w = res/rms
 	error = w.real*w.imag
-	beta = 0.00005
+	beta = 0.000000005
+	alpha = 200000
+	integral = alpha*sum(error)
 	shift = beta*error
-	pll_res = res*numpy.exp(-1j*time*shift)
+	pll_res = res*numpy.exp(-1j*time*(shift+integral))
 	pll_res = pll_res.real + pll_res.imag
-	# print(res)
-	# plt.plot(data, label="data")
-	# plt.plot(res,label="results")
-	# plt.legend()
-	# plt.show()
-	return pll_res
+	
+	# filtered = res
+	# filtered[(filtered.real+filtered.imag) > 0] = 1
+	# filtered[(filtered.real+filtered.imag) <= 0] = -1 #filtering like this actually gives a really clean signal
+	
+	return res.real+res.imag
 
 if __name__=='__main__':
 	data, time = open()
