@@ -16,7 +16,7 @@ def open(filename='GRC scripts/test.dat'):
 	real = data[0::2]
 	imag = data[1::2]
 	data = real+1j*imag
-	# print data
+
 	t = numpy.linspace(0, len(data), len(data))
 	return data, t
 

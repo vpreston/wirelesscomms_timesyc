@@ -2,7 +2,7 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: Transmitter
-# Generated: Tue Feb  2 12:23:28 2016
+# Generated: Sun Feb  7 18:18:48 2016
 ##################################################
 
 from PyQt4 import Qt
@@ -74,16 +74,13 @@ class transmitter(gr.top_block, Qt.QWidget):
         self.olin_usrp11.set_samp_rate(samp_rate)
         self.olin_usrp11.set_center_freq(2.4855e9, 0)
         self.olin_usrp11.set_gain(20, 0)
-        self.blocks_file_source_0 = blocks.file_source(gr.sizeof_gr_complex*1, "/home/vpreston/Documents/wirelesscomms_timesyc/GRC scripts/transmit_this.npy", True)
-        self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_gr_complex*1, "transmitted_data", False)
-        self.blocks_file_sink_0.set_unbuffered(False)
+        self.blocks_file_source_0 = blocks.file_source(gr.sizeof_gr_complex*1, "/home/vpreston/Documents/wirelesscomms_timesyc/Matlab scripts/data.dat", True)
 
         ##################################################
         # Connections
         ##################################################
         self.connect((self.blocks_file_source_0, 0), (self.qtgui_time_sink_x_0, 0))
         self.connect((self.blocks_file_source_0, 0), (self.olin_usrp11, 0))
-        self.connect((self.blocks_file_source_0, 0), (self.blocks_file_sink_0, 0))
 
 
 # QT sink close method reimplementation
