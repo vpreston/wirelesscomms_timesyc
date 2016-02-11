@@ -12,7 +12,7 @@ real = []
 imag = []
 
 #get and process data
-def open(filename='GRC scripts/Data/10ps.dat'):
+def open(filename='GRC scripts/test.dat'):
 	data = numpy.fromfile(filename, dtype = 'float32')[5000:10000]
 	real = data[0::2]
 	imag = data[1::2]
@@ -33,22 +33,24 @@ def fourth(data):
 def process(offset, data, time):
 
 	#PLL constants
-	beta = .1
-	alpha =  50
+	beta = 0.2
+	alpha =  0
+	a = -1./numpy.sqrt(2)
+	b = -a
 
 	#PLL storage
 	total_error = 0
 	pll_res = []
 
 	#Use fft to do initial correction
-	offset = offset/4#-9e-10 #offset is raised to the 4th, so when converted it is *4
+	offset = offset/4 #offset is raised to the 4th, so when converted it is *4
 
 	for index in range(0, len(data)-1):
 		pll_res.append(data[index]*numpy.exp(-1j*offset*SAMPLE_RATE))
-		error = pll_res[index].real*pll_res[index].imag
-		sample = pll_res[index]
+		error = (b*(numpy.sign(pll_res[index].imag) * pll_res[index].real)) * (a*(numpy.sign(pll_res[index].real)*pll_res[index].imag))
+		# error = pll_res[index].real*pll_res[index].imag
 		total_error += error
-		offset = offset + beta*error
+		offset = offset + beta*error + alpha*total_error
 
 	return numpy.asarray(pll_res)
 
@@ -69,7 +71,9 @@ if __name__=='__main__':
 	res = process(offset,data, time)
 	print error_calc(res)
 
-	plt.plot(res)
+	# plt.plot(res)
+	plt.plot(res.real)
+	plt.plot(res.imag)
 	plt.legend()
 	plt.title("Processed Signal")
 
