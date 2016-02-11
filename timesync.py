@@ -69,10 +69,17 @@ def process(offset, data, time):
 
 	return pll_res
 
-# def error_calc(data):
-# 	data = abs(data)
-# 	amp = numpy.mean(data)
-# 	noise = open
+def error_calc(data):
+	data = abs(data)
+	amp = numpy.mean(data)/len(data)
+	noise = open('noise.dat')
+
+	N = numpy.var(noise)
+	E = data^2
+	pe = 0.5 * scipy.erfc(numpy.sqrt(E*50000./N))
+
+	return pe
+
 
 
 
@@ -85,6 +92,7 @@ if __name__=='__main__':
 	# plt.title("Unprocessed")
 	offset = fourth(data)
 	res = process(offset,data, time)
+	print error_calc(res)
 	#print(interpret(res))
 
 	# plt.plot(res.real, label="Real")
