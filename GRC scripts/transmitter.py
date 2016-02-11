@@ -2,7 +2,7 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: Transmitter
-# Generated: Sun Feb  7 18:18:48 2016
+# Generated: Wed Feb 10 21:28:57 2016
 ##################################################
 
 from PyQt4 import Qt
@@ -94,8 +94,8 @@ class transmitter(gr.top_block, Qt.QWidget):
 
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
-        self.olin_usrp11.set_samp_rate(self.samp_rate)
         self.qtgui_time_sink_x_0.set_samp_rate(self.samp_rate)
+        self.olin_usrp11.set_samp_rate(self.samp_rate)
 
 if __name__ == '__main__':
     import ctypes
