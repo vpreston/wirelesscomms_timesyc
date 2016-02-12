@@ -12,7 +12,7 @@ real = []
 imag = []
 
 #get and process data
-def open(filename='GRC scripts/test.dat'):
+def open(filename='GRC scripts/Data/imag_5ps.dat'):
 	data = numpy.fromfile(filename, dtype = 'float32')[5000:10000]
 	real = data[0::2]
 	imag = data[1::2]
@@ -33,7 +33,7 @@ def fourth(data):
 def process(offset, data, time):
 
 	#PLL constants
-	beta = 0.2
+	beta = 0.3  #0.1 for BPSK, 0.2 for QPSK on slower data rate
 	alpha =  0
 	a = -1./numpy.sqrt(2)
 	b = -a
