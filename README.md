@@ -1,7 +1,7 @@
 # Time Synchronization: BPSK and QPSK Demodulation
 ##### Project for Wireless Communications class at Olin College of Engineering
 
-This repository is code written by Emily Tumang and Victoria Preston under the instruction of Siddhartan Govindasmy. This repo provides scripts to transmit, receive, and process wireless signals using gnuradio and python.
+This repository is code written by Emily Tumang and Victoria Preston under the instruction of Siddhartan Govindasamy. This repo provides scripts to transmit, receive, and process wireless signals using gnuradio and python.
 
 ### Dependencies
 This code will work with Python 2.7+ and Numpy 1.8+. Hardware tested with the transmission and reception using gnuradio were Ettus Research Universal Software Peripheral Radios (USRP1s). 
