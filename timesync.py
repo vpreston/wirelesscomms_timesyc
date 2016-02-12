@@ -33,7 +33,7 @@ def fourth(data):
 def process(offset, data, time):
 
 	#PLL constants
-	beta = 0.3  #0.1 for BPSK, 0.2 for QPSK on slower data rate
+	beta = 0.1  #0.1 for BPSK, 0.2 for QPSK on slower data rate
 	alpha =  0
 	a = -1./numpy.sqrt(2)
 	b = -a
@@ -45,9 +45,11 @@ def process(offset, data, time):
 	#Use fft to do initial correction
 	offset = offset/4 #offset is raised to the 4th, so when converted it is *4
 
+	rms = numpy.sqrt(numpy.mean(abs(data)**2))
+
 	for index in range(0, len(data)-1):
-		pll_res.append(data[index]*numpy.exp(-1j*offset*SAMPLE_RATE))
-		error = (b*(numpy.sign(pll_res[index].imag) * pll_res[index].real)) * (a*(numpy.sign(pll_res[index].real)*pll_res[index].imag))
+		pll_res.append(data[index]/rms*numpy.exp(-1j*offset*SAMPLE_RATE))
+		error = -((numpy.sign(pll_res[index].imag) * pll_res[index].real)) + ((numpy.sign(pll_res[index].real)*pll_res[index].imag))
 		# error = pll_res[index].real*pll_res[index].imag
 		total_error += error
 		offset = offset + beta*error + alpha*total_error
@@ -71,11 +73,14 @@ if __name__=='__main__':
 	res = process(offset,data, time)
 	print error_calc(res)
 
-	# plt.plot(res)
 	plt.plot(res.real)
 	plt.plot(res.imag)
 	plt.legend()
 	plt.title("Processed Signal")
+	print res
+
+	# plt.scatter(res.real,res.imag)
+	# plt.scatter(res.real,res.imag)
 
 	plt.show()
 
