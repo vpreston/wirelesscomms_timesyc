@@ -33,7 +33,7 @@ def fourth(data):
 def process(offset, data, time):
 
 	#PLL constants
-	beta = 0.1  #0.1 for BPSK, 0.2 for QPSK on slower data rate
+	beta = 0.001  #0.1 for BPSK, 0.2 for QPSK on slower data rate
 	alpha =  0
 	a = -1./numpy.sqrt(2)
 	b = -a
